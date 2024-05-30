@@ -15,6 +15,7 @@ body{
     top:4%;
 }
 
+
 .background{
     width: 100%;
     height: 100vh;
@@ -81,6 +82,15 @@ body{
     overflow: hidden;
 } 
 
+.container .forgor-box {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: calc(100% - 58%);
+    height: 100%;
+    overflow: hidden;
+}
+
 .logreg-box .form-box{
     position: absolute;
     display: flex;
@@ -95,18 +105,52 @@ body{
     color:#e4e4e4
 }
 
+.forgor-box .forgot-password {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    backdrop-filter: blur(20px);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    color: #e4e4e4;
+    display: none; /* Initially hide the forgot password form */
+}
+
 .logreg-box .form-box.login{
     transform: translateX(0);
     transition: transform 0.5s ease;
     transition-delay: 0.5s;
 }
 
+.forgor-box .forgot-password.login{
+    transform: translateX(0);
+    transition: transform 0.5s ease;
+    transition-delay: 0.5s;
+}
+
+.forgor-box.active .forgot-password.login{
+    transform: translateX(100vw);
+    transition-delay: 0s;
+    pointer-events: none; /* Add this line to disable pointer events on the hidden form */
+}
+
 .logreg-box.active .form-box.login{
     transform: translateX(100vw);
     transition-delay: 0s;
+    pointer-events: auto;  /* Add this line to enable pointer events on the visible form */
 }
 
 .logreg-box .form-box.register{
+    transform: translateX(100vw);
+    transition: transform 0.5s ease;
+    transition-delay: 0;
+}
+
+.forgor-box .forgot-password.register{
     transform: translateX(100vw);
     transition: transform 0.5s ease;
     transition-delay: 0;
@@ -117,7 +161,17 @@ body{
     transition-delay: 0.5s;
 }
 
+.forgor-box.active .forgot-password.register{
+    transform: translateX(0);
+    transition-delay: 0.5s;
+}
+
 .form-box h2{
+    font-size: 32px;
+    text-align: center;
+}
+
+.forgor-box h2{
     font-size: 32px;
     text-align: center;
 }
@@ -130,7 +184,27 @@ body{
     margin: 30px 0;
 }
 
+.forgor-box .input-box-forgor{
+    position: relative;
+    width: 340px;
+    height: 50px;
+    border-bottom: 2px solid #e4e4e4;
+    margin: 30px 0;
+}
+
 .input-box input{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #e4e4e4;
+    font-weight: 500;
+    padding-right: 28px;
+}
+
+.input-box-forgor input{
     width: 100%;
     height: 100%;
     background: transparent;
@@ -153,12 +227,35 @@ body{
     transition: .5s ease;
 }
 
+.input-box-forgor label{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    font-size: 16px;
+    font-weight: 500;
+    pointer-events: none;
+    transition: .5s ease;
+}
+
 .input-box input:focus~label,
 .input-box input:valid~label {
     top: -5px;
 }
 
+.input-box-forgor input:focus~label,
+.input-box-forgor input:valid~label {
+    top: -5px;
+}
+
 .input-box .icon{
+    position: absolute;
+    top: 13px;
+    right: 0;
+    font-size: 19px;
+}
+
+.input-box-forgor .icon{
     position: absolute;
     top: 13px;
     right: 0;
@@ -282,7 +379,3 @@ body{
         width: 100%;
     } 
 }
-
-
-
-
