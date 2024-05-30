@@ -32,6 +32,25 @@
                 </div>
             </div>
 
+            <div class="forgor-box"> 
+                <div class="forgot-password form">
+                    <form action="#">
+                        <h2>Forgot Password</h2>
+
+                        <div class="input-box-forgor">
+                            <span class="icon">
+                                <i class='bx bxs-envelope' ></i>
+                            </span>
+                            <input type="email" id="forgor_email" name="email" required>
+                            <label>E-Mail</label>
+                        </div>
+
+                        <button type="submit" id="forgotPass" class="btn">Reset Password</button>
+
+                    </form>
+                </div>
+            </div>
+
             <div class="logreg-box">
                 <div class="form-box login">
                     <form action="#">
@@ -41,7 +60,7 @@
                             <span class="icon">
                                 <i class='bx bxs-envelope' ></i>
                             </span>
-                            <input type="email" required>
+                            <input type="email" id="mail" required>
                             <label>E-Mail</label>
                         </div>
 
@@ -49,21 +68,16 @@
                             <span class="icon">
                                 <i class='bx bxs-lock-alt' ></i>
                             </span>
-                            <input type="password" required>
+                            <input type="password" id="pass" required>
                             <label>Password</label>
                         </div>
 
-                        <div class="remember-forgot">
-                            <label>
-                                <input type="checkbox">
-                                Remember Me
-                            </label>
-                            <a href="#">Forgot Password</a>
+                        <div>
+                            <a href="#" class="remember-forgot" >Forgot Password</a>
                         </div>
 
-                        <a href="moviewebsite.html">
-                            <button type="button" class="btn">sign in</button>
-                        </a>
+                        <button type="submit" id="login" class="btn">Sign in</button>
+
                         
                         <div class="login-register">
                             <p>Don't have an account?
@@ -73,7 +87,6 @@
                     </form>
                 </div>
 
-
                 <div class="form-box register">
                     <form action="#">
                         <h2>Sign Up</h2>
@@ -82,15 +95,15 @@
                             <span class="icon">
                                 <i class='bx bxs-user' ></i>
                             </span>
-                            <input type="text" required>
-                            <label>Name</label>
+                            <input type="text" id="username" name="username" required>
+                            <label>Username</label>
                         </div>
 
                         <div class="input-box">
                             <span class="icon">
                                 <i class='bx bxs-envelope' ></i>
                             </span>
-                            <input type="email" required>
+                            <input type="email" id="email" name="email" required>
                             <label>E-Mail</label>
                         </div>
 
@@ -98,21 +111,12 @@
                             <span class="icon">
                                 <i class='bx bxs-lock-alt' ></i>
                             </span>
-                            <input type="password" required>
+                            <input type="password" id="password" name="password" required>
                             <label>Password</label>
                         </div>
-
-                        <div class="remember-forgot">
-                            <label>
-                                <input type="checkbox">
-                                I agree to the terms & conditions
-                            </label>
-                        </div>
-
-                        <a href="moviewebsite.html">
-                            <button type="button" class="btn">sign in</button>
-                        </a>
-
+                            <a href = "moviewebsite.html">
+                                <button type="submit" id='SignUp' class="btn">Sign Up</button>
+                            </a>    
 
                         <div class="login-register">
                             <p>Already have an account?
@@ -121,11 +125,141 @@
                         </div>
                     </form>
                 </div>
-
-
             </div>
         </div>
 
         <script type="text/javascript" src="loginEffects.js"></script>
     </body>
+
+    <!-- FireBase stuff -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getDatabase, set, ref, update } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+
+
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBiWAcVJ-hO2ZoQ5Vfbm5GoD87rhHL392s",
+          authDomain: "movieverse-61fd3.firebaseapp.com",
+          databaseURL: "https://movieverse-61fd3-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "movieverse-61fd3",
+          storageBucket: "movieverse-61fd3.appspot.com",
+          messagingSenderId: "805075847178",
+          appId: "1:805075847178:web:87af2769b486c151fe37f3"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const auth = getAuth();
+        const signUpButton = document.getElementById('SignUp');
+        const logregBox = document.querySelector('.logreg-box');
+
+        signUpButton.addEventListener('click',(e) => {
+            e.preventDefault();
+
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var username = document.getElementById('username').value;
+
+            // Email validation using a regular expression
+            const emailRegex = /^[A-Za-z0-9+_.-]+@(.+)$/;
+
+            if (!email.match(emailRegex)) {
+                alert('Invalid email format. Please enter a valid email address.');
+                return; // Prevent further execution
+            }
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+
+                    set(ref(database, 'users/' + user.uid), {
+                        username : username,
+                        email: email,
+                        password : password
+                    });   
+
+                    alert('User created!');
+                    logregBox.classList.remove('active');
+                    // ...
+                    
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    // ..
+                    alert(errorMessage);
+
+                });        
+        })
+
+    login.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        var email = document.getElementById('mail').value;
+        var password = document.getElementById('pass').value;
+
+        // Email validation using a regular expression
+        const emailRegex = /^[A-Za-z0-9+_.-]+@(.+)$/;
+
+        if (!email.match(emailRegex)) {
+            alert('Invalid email format. Please enter a valid email address.');
+            return; // Prevent further execution
+        }
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                alert('Login in Succesfull!');
+
+                const dt = new Date();
+
+                update(ref(database, 'users/' + user.uid), {
+                    password : password,
+                    last_login: dt
+                });
+
+                // Redirect to the desired page
+                window.location.href = "moviewebsite.html";
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert('Invalid UserName or Password!');
+            });
+        });
+
+        forgotPass.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            var email = document.getElementById('forgor_email').value;
+
+            sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    alert('Resent link sent!');
+                    // Password reset email sent!
+                    // ..
+
+                    window.location.href = "index.html";
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    alert(errorMessage);
+                    // ..
+                });
+
+        });
+
+    </script>
+
+
 </html>
